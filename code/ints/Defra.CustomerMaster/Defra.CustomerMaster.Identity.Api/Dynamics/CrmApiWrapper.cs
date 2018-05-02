@@ -125,7 +125,7 @@ namespace Defra.CustomerMaster.Identity.Api.Dynamics
             return JsonConvert.SerializeObject(contact.contactid);
         }
 
-        public string InitialMatch(string UPN)
+        public Contact InitialMatch(string UPN)
         {
             JObject exeAction = new JObject();
             exeAction["UPN"] = UPN;
@@ -144,7 +144,7 @@ namespace Defra.CustomerMaster.Identity.Api.Dynamics
             request.Content = new StringContent(paramsContent);
             request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
 
-            string jsonValue = ConnectToCRM(request);
+            Contact jsonValue = ConnectToCRM(request);
             return jsonValue;
         }
 
@@ -152,7 +152,7 @@ namespace Defra.CustomerMaster.Identity.Api.Dynamics
         /// 
         /// </summary>
         /// <returns></returns>
-       public string UserInfo(Contact contact)
+       public Contact UserInfo(Contact contact)
         {        
             JObject exeAction = new JObject();
             exeAction["firstname"] = contact.firstname;
@@ -171,11 +171,13 @@ namespace Defra.CustomerMaster.Identity.Api.Dynamics
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, _resource + "api/data/v8.2/defra_UpsertContact");
             request.Content = new StringContent(paramsContent);
             request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-            string value=ConnectToCRM(request);
-            return value;     
-                        
+            Contact value=ConnectToCRM(request);
+
+            return value;
+
+
         }
-        private string ConnectToCRM(HttpRequestMessage request)
+        private Contact ConnectToCRM(HttpRequestMessage request)
         {
             Configuration config = new Configuration();
             config.Username = _username;
@@ -196,6 +198,8 @@ namespace Defra.CustomerMaster.Identity.Api.Dynamics
             httpClient.Timeout = new TimeSpan(0, 2, 0);
             httpClient.DefaultRequestHeaders.Add("OData-MaxVersion", "4.0");
             httpClient.DefaultRequestHeaders.Add("OData-Version", "4.0");
+            httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {auth.AcquireToken().AccessToken}");
+
             var contactResponse = httpClient.SendAsync(request).Result;
 
             if (!contactResponse.IsSuccessStatusCode)
@@ -206,7 +210,7 @@ namespace Defra.CustomerMaster.Identity.Api.Dynamics
 
 
             var contact = JsonConvert.DeserializeObject<Contact>(content);
-            return JsonConvert.SerializeObject(contact.contactid);
-        }
+            return contact;         }
     }
+
 }

@@ -21,7 +21,15 @@ namespace Defra.CustomerMaster.Identity.Api
         [DataMember]
         public string emailid;
 
-        
+        [DataMember]
+        public string UID;
 
+    }
+
+    [DataContract]
+    public class ReturnObject
+    {
+        [DataMember]
+        public string ServiceUserID;
     }
 }
