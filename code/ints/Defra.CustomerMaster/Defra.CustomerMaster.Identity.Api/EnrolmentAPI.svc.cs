@@ -18,14 +18,14 @@ namespace Defra.CustomerMaster.Identity.Api
             }
         }
 
-        public string UserInfo()
+        public string UserInfo(Contact contact)
         {
             
             try
             {
-                Contact contactRequest = new Contact() { firstName = "test", lastName = "test", emailid = "testfromwcf@test.com2" };
+                //Contact contactRequest = new Contact() { firstname = "test", lastName = "test", emailid = "testfromwcf@test.com2" };
 
-                return string.Format("ContactId is: {0}", new CrmApiWrapper().UserInfo(contactRequest));
+                return string.Format("ContactId is: {0}", new CrmApiWrapper().UserInfo(contact));
                 
             }
             catch (Exception ex)

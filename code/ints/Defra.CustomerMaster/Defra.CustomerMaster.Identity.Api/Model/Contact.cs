@@ -13,13 +13,15 @@ namespace Defra.CustomerMaster.Identity.Api
         public Nullable<Guid> contactid;
 
         [DataMember]
-        public string firstName;
+        public string firstname;
 
         [DataMember]
-        public string lastName;
+        public string lastname;
 
         [DataMember]
         public string emailid;
+
+        
 
     }
 }

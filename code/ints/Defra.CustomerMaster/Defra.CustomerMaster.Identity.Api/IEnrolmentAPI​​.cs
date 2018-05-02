@@ -12,7 +12,7 @@ namespace Defra.CustomerMaster.Identity.Api
         [WebInvoke(Method = "GET",
             RequestFormat = WebMessageFormat.Json,
             ResponseFormat = WebMessageFormat.Json,
-            BodyStyle = WebMessageBodyStyle.Wrapped,
+            BodyStyle = WebMessageBodyStyle.Bare,
             UriTemplate = "/InitialMatch/{UPN}")]
         string InitialMatch(string UPN);
 
@@ -21,9 +21,9 @@ namespace Defra.CustomerMaster.Identity.Api
         [WebInvoke(Method = "PUT",
             RequestFormat = WebMessageFormat.Json,
             ResponseFormat = WebMessageFormat.Json,
-            BodyStyle = WebMessageBodyStyle.Wrapped,
-            UriTemplate = "/UserInfo")]
-        string UserInfo();
+            BodyStyle = WebMessageBodyStyle.Bare,
+            UriTemplate = "/UserInfo/")]
+        string UserInfo(Contact contact);
 
         [OperationContract]
         CompositeType GetDataUsingDataContract(CompositeType composite);

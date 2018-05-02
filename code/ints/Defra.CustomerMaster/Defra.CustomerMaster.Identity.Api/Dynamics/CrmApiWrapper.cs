@@ -155,8 +155,8 @@ namespace Defra.CustomerMaster.Identity.Api.Dynamics
        public string UserInfo(Contact contact)
         {        
             JObject exeAction = new JObject();
-            exeAction["firstname"] = contact.firstName;
-            exeAction["lastname"] = contact.lastName;
+            exeAction["firstname"] = contact.firstname;
+            exeAction["lastname"] = contact.lastname;
             exeAction["emailid"] = contact.emailid;
 
             string paramsContent;
