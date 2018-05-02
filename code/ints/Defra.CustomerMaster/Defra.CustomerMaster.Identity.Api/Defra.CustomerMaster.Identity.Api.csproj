@@ -88,12 +88,15 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Properties\PublishProfiles\CustomerMasterWCF -DEV- FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\CustomerMasterWCF -DEV- Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\EUEWCF - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\EUEWCF - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>
