@@ -14,14 +14,14 @@ namespace Defra.CustomerMaster.Identity.Api
                 //return string.Format("ServicieUserID is: {0}", new CrmApiWrapper().InitialMatch(UPN));
 
                 Contact crmContact = new CrmApiWrapper().InitialMatch(UPN);
-                ReturnObject returnObj = new ReturnObject() { ServiceUserID = crmContact.contactid.ToString() };
+                ServiceObject returnObj = new ServiceObject() { ServiceUserID = crmContact.contactid.ToString() };
 
                 //return string.Format1("ServicieU1serID is: {0}", );
                 return JsonConvert.SerializeObject(returnObj);
             }
             catch(Exception ex)
             {
-                return JsonConvert.SerializeObject(new ReturnObject() { ServiceUserID = null });
+                return JsonConvert.SerializeObject(new ServiceObject() { ServiceUserID = null });
             }
         }
 
@@ -32,7 +32,7 @@ namespace Defra.CustomerMaster.Identity.Api
             {
                 //Contact contactRequest = new Contact() { firstname = "test", lastName = "test", emailid = "testfromwcf@test.com2" };
                 Contact crmContact = new CrmApiWrapper().UserInfo(contact);
-                ReturnObject returnObj = new ReturnObject() { ServiceUserID = crmContact.contactid.ToString() };
+                ServiceObject returnObj = new ServiceObject() { ServiceUserID = crmContact.contactid.ToString() };
 
                 //return string.Format1("ServicieU1serID is: {0}", );
                 return JsonConvert.SerializeObject(returnObj);
@@ -40,7 +40,7 @@ namespace Defra.CustomerMaster.Identity.Api
             }
             catch (Exception ex)
             {
-                return JsonConvert.SerializeObject(new ReturnObject() { ServiceUserID = null });
+                return JsonConvert.SerializeObject(new ServiceObject() { ServiceUserID = null });
             }
         }
 

@@ -84,6 +84,7 @@
       <DependentUpon>EnrolmentAPI.svc</DependentUpon>
     </Compile>
     <Compile Include="IEnrolmentAPI​​.cs" />
+    <Compile Include="Model\ServiceObject.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>
@@ -93,6 +94,10 @@
     <None Include="packages.config">
       <SubType>Designer</SubType>
     </None>
+    <None Include="Properties\PublishProfiles\CustomerMasterWCF -DEV- FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\CustomerMasterWCF -DEV- Web Deploy.pubxml" />
+    <None Include="Properties\PublishProfiles\EUEWCF - FTP.pubxml" />
+    <None Include="Properties\PublishProfiles\EUEWCF - Web Deploy.pubxml" />
     <None Include="Web.Debug.config">
       <DependentUpon>Web.config</DependentUpon>
     </None>

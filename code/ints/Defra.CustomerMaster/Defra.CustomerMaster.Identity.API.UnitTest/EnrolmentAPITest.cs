@@ -14,7 +14,7 @@ namespace Defra.CustomerMaster.Identity.API.UnitTest
 
 
         [TestMethod]
-        public void TestIntialMatch()
+        public void InitialMatchTest()
         {
 
             string serviceID = "ab5fb791-624c-e811-a834-000d3a2b2be0";
@@ -35,14 +35,14 @@ namespace Defra.CustomerMaster.Identity.API.UnitTest
                 string content = response.Content.Remove(0, 1);
                 content = content.Remove(content.Length - 1, 1);
                 content = content.Replace("\\", "");
-                ReturnObject returnValue = JsonConvert.DeserializeObject<ReturnObject>(content);
+                ServiceObject returnValue = JsonConvert.DeserializeObject<ServiceObject>(content);
                 Assert.AreEqual(serviceID, returnValue.ServiceUserID);
             }
 
 
         }
         [TestMethod]
-        public void TestUserInfo()
+        public void UserInfoTest()
         {
             string serviceID = "2e0c1b70-f24d-e811-a83e-000d3a2b2ba3";
             var action = new Action<IRestResponse<object>, RestRequestAsyncHandle>(CallbackResponse);
@@ -68,7 +68,7 @@ namespace Defra.CustomerMaster.Identity.API.UnitTest
                 string content = response.Content.Remove(0, 1);
                 content = content.Remove(content.Length - 1, 1).Replace("\\", "");
 
-                ReturnObject returnValue = JsonConvert.DeserializeObject<ReturnObject>(content);
+                ServiceObject returnValue = JsonConvert.DeserializeObject<ServiceObject>(content);
                 Assert.AreEqual(serviceID, returnValue.ServiceUserID);
             }
 
