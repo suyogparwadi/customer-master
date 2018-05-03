@@ -10,5 +10,8 @@ namespace Defra.CustomerMaster.Identity.Api
     {
         [DataMember]
         public string ServiceUserID;
+
+        [DataMember]
+        public string ErrorMsg;
     }
 }

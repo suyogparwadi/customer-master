@@ -12,35 +12,40 @@ namespace Defra.CustomerMaster.Identity.Api
             try
             {
                 //return string.Format("ServicieUserID is: {0}", new CrmApiWrapper().InitialMatch(UPN));
-
+                if (string.IsNullOrEmpty(UPN) || string.IsNullOrWhiteSpace(UPN))
+                    throw new ApplicationException("UPN can not be empty or null");
                 Contact crmContact = new CrmApiWrapper().InitialMatch(UPN);
                 ServiceObject returnObj = new ServiceObject() { ServiceUserID = crmContact.contactid.ToString() };
 
                 //return string.Format1("ServicieU1serID is: {0}", );
                 return JsonConvert.SerializeObject(returnObj);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                return JsonConvert.SerializeObject(new ServiceObject() { ServiceUserID = null });
+                return JsonConvert.SerializeObject(new ServiceObject() { ServiceUserID = null,ErrorMsg=ex.Message });
             }
         }
 
         public string UserInfo(Contact contact)
         {
-            
+
             try
             {
                 //Contact contactRequest = new Contact() { firstname = "test", lastName = "test", emailid = "testfromwcf@test.com2" };
+                if(contact is null|| string.IsNullOrEmpty(contact.emailid))
+                {
+                    throw new ApplicationException("emailid of a contact can not be empty or null");
+                }
                 Contact crmContact = new CrmApiWrapper().UserInfo(contact);
                 ServiceObject returnObj = new ServiceObject() { ServiceUserID = crmContact.contactid.ToString() };
 
                 //return string.Format1("ServicieU1serID is: {0}", );
                 return JsonConvert.SerializeObject(returnObj);
-                
+
             }
             catch (Exception ex)
             {
-                return JsonConvert.SerializeObject(new ServiceObject() { ServiceUserID = null });
+                return JsonConvert.SerializeObject(new ServiceObject() { ServiceUserID = null,ErrorMsg=ex.Message});
             }
         }
 
