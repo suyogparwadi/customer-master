@@ -18,6 +18,9 @@ namespace Defra.CustomerMaster.Identity.Api.Dynamics
         private readonly string _resource;// = "https://defra-custmast-dev.api.crm4.dynamics.com";
         private readonly string _username;// = "aruna.ramidi@defradev.onmicrosoft.com";
 
+        /// <summary>
+        /// 
+        /// </summary>
         public CrmApiWrapper()
         {
 
@@ -43,87 +46,11 @@ namespace Defra.CustomerMaster.Identity.Api.Dynamics
             _username = ConfigurationManager.AppSettings["DynamicsApiUsername"];
         }
 
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="UPN"></param>
-        /// <returns></returns>       
-        public string InitialMatchOld(string UPN)
-        {
-            if (string.IsNullOrEmpty(UPN))
-            {
-                throw new ApplicationException("UPN is not present in the request. Please provide the UPN");
-            }
-            //string[] uria = new string[] {
-            //    "defra_InitialMatch",
-            //    "(UPN=@p1)",
-            //    "?@p1='" + UPN+"'"};
-           
-
-            JObject exeAction = new JObject();            
-            exeAction["UPN"] = UPN;
-
-            string paramsContent;
-            if (exeAction.GetType().Name.Equals("JObject"))
-            { paramsContent = exeAction.ToString(); }
-            else
-            {
-                paramsContent = JsonConvert.SerializeObject(exeAction, new JsonSerializerSettings()
-                { DefaultValueHandling = DefaultValueHandling.Ignore });
-            }
-
-            Configuration config = new Configuration();
-            config.Username = _username;
-
-
-            SecureString Password = new SecureString();
-            foreach (char c in _password) Password.AppendChar(c);
-
-            config.Password = Password;
-            config.ClientId = _clientId;
-            config.RedirectUrl = Authority;
-            config.ServiceUrl = _resource;
-            Authentication auth = new Authentication(config);//, Authority);  
-            
-            httpClient = new HttpClient(auth.ClientHandler, true);
-
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, config.ServiceUrl + "api/data/v8.2/defra_InitialMatch");
-            request.Content = new StringContent(paramsContent);
-            request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-
-
-            //httpClient.BaseAddress = new Uri(config.ServiceUrl + "api/data/v8.2/");
-            httpClient.Timeout = new TimeSpan(0, 2, 0);
-            httpClient.DefaultRequestHeaders.Add("OData-MaxVersion", "4.0");
-            httpClient.DefaultRequestHeaders.Add("OData-Version", "4.0");
-         
-
-
-
-            // httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {auth.AcquireToken().AccessToken}");
-
-
-            // var contactResonse = httpClient.GetAsync("contacts").Result;
-            //// httpClient.DefaultRequestHeaders.Add("Prefer", "odata.include-annotations=OData.Community.Display.V1.FormattedValue");
-            //httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer", auth.AcquireToken().AccessToken);
-            //httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {auth.AcquireToken().AccessToken}");
-
-
-            // var content = contactResonse.Result.Content.ReadAsStringAsync().Result;
-            //var contactResonse = httpClient.GetAsync("contacts").Result;
-            var contactResponse = httpClient.SendAsync(request).Result;
-            //var contactResponse = httpClient.GetAsync("contacts?$select=contactid&$filter=defra_upn eq '"+UPN+"'").Result;
-            //var contactResonse = httpClient.GetAsync(string.Join("", uria)).Result;
-            if (!contactResponse.IsSuccessStatusCode)
-            {
-                return null;
-            }
-            var content = contactResponse.Content.ReadAsStringAsync().Result;
-
-            
-            var contact = JsonConvert.DeserializeObject<Contact>(content);
-            return JsonConvert.SerializeObject(contact.contactid);
-        }
+      /// <summary>
+      /// 
+      /// </summary>
+      /// <param name="UPN"></param>
+      /// <returns></returns>
 
         public Contact InitialMatch(string UPN)
         {
@@ -177,6 +104,12 @@ namespace Defra.CustomerMaster.Identity.Api.Dynamics
 
 
         }
+
+        /// <summary>
+        /// 
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns></returns>
         private Contact ConnectToCRM(HttpRequestMessage request)
         {
             Configuration config = new Configuration();
