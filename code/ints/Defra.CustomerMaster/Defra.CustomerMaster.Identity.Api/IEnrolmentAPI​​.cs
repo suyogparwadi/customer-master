@@ -1,4 +1,5 @@
-﻿using System.Runtime.Serialization;
+﻿using Defra.CustomerMaster.Identity.Api.Model;
+using System.Runtime.Serialization;
 using System.ServiceModel;
 using System.ServiceModel.Web;
 
@@ -26,7 +27,13 @@ namespace Defra.CustomerMaster.Identity.Api
         string UserInfo(Contact contact);
 
         [OperationContract]
-        CompositeType GetDataUsingDataContract(CompositeType composite);
+        [WebInvoke(Method = "GET",
+            RequestFormat = WebMessageFormat.Json,
+            ResponseFormat = WebMessageFormat.Json,
+            BodyStyle = WebMessageBodyStyle.Bare,
+            UriTemplate = "/Authz?ServiceID={ServiceID}&UPN={UPN}")]
+        string Authz(string ServiceID, string UPN);
+
     }
 
 

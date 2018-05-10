@@ -6,6 +6,7 @@ using System.Security;
 using Newtonsoft.Json;
 using System.Configuration;
 using Newtonsoft.Json.Linq;
+using Defra.CustomerMaster.Identity.Api.Model;
 
 namespace Defra.CustomerMaster.Identity.Api.Dynamics
 {

@@ -4,6 +4,7 @@ using RestSharp;
 using System.Threading;
 using Newtonsoft.Json;
 using Defra.CustomerMaster.Identity.Api;
+using Defra.CustomerMaster.Identity.Api.Model;
 
 namespace Defra.CustomerMaster.Identity.API.UnitTest
 {

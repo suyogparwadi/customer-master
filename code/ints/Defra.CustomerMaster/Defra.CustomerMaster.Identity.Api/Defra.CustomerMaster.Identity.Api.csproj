@@ -79,6 +79,8 @@
     <Compile Include="Dynamics\Authentication.cs" />
     <Compile Include="Dynamics\Configuration.cs" />
     <Compile Include="Dynamics\CrmApiWrapper.cs" />
+    <Compile Include="Model\AuthzParam.cs" />
+    <Compile Include="Model\AuthzResponse.cs" />
     <Compile Include="Model\Contact.cs" />
     <Compile Include="EnrolmentAPI.svc.cs">
       <DependentUpon>EnrolmentAPI.svc</DependentUpon>
