@@ -11,7 +11,7 @@ namespace Defra.CustomerMaster.Identity.Api.Model
         public string version;
 
         [DataMember]
-        public string status;
+        public int status;
 
         [DataMember]
         public string roles;

@@ -32,7 +32,7 @@ namespace Defra.CustomerMaster.Identity.Api
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Bare,
             UriTemplate = "/Authz?ServiceID={ServiceID}&UPN={UPN}")]
-        string Authz(string ServiceID, string UPN);
+        AuthzResponse Authz(string ServiceID, string UPN);
 
     }
 
