@@ -38,7 +38,7 @@ namespace Defra.CustomerMaster.Identity.Api
             try
             {
                 //Contact contactRequest = new Contact() { firstname = "test", lastName = "test", emailid = "testfromwcf@test.com2" };
-                if(contact is null|| string.IsNullOrEmpty(contact.emailid))
+                if((contact== null)|| string.IsNullOrEmpty(contact.emailid))
                 {
                     throw new ApplicationException("emailid of a contact can not be empty or null");
                 }
