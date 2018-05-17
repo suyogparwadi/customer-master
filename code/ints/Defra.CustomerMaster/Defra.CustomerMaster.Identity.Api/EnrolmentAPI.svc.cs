@@ -17,6 +17,7 @@ namespace Defra.CustomerMaster.Identity.Api
         {
             try
             {
+                System.Diagnostics.Trace.TraceError(UPN);
                 //return string.Format("ServicieUserID is: {0}", new CrmApiWrapper().InitialMatch(UPN));
                 if (string.IsNullOrEmpty(UPN) || string.IsNullOrWhiteSpace(UPN))
                     throw new ApplicationException("UPN can not be empty or null");
@@ -38,9 +39,9 @@ namespace Defra.CustomerMaster.Identity.Api
             try
             {
                 //Contact contactRequest = new Contact() { firstname = "test", lastName = "test", emailid = "testfromwcf@test.com2" };
-                if((contact== null)|| string.IsNullOrEmpty(contact.emailid))
+                if((contact== null)|| string.IsNullOrEmpty(contact.upn))
                 {
-                    throw new ApplicationException("emailid of a contact can not be empty or null");
+                    throw new ApplicationException("UPN can not be empty or null");
                 }
                 Contact crmContact = new CrmApiWrapper().UserInfo(contact);
                 ServiceObject returnObj = new ServiceObject() { ServiceUserID = crmContact.contactid.ToString() };

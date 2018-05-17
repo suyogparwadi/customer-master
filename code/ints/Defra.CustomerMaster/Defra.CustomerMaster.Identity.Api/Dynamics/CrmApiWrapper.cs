@@ -86,6 +86,7 @@ namespace Defra.CustomerMaster.Identity.Api.Dynamics
             exeAction["firstname"] = contact.firstname;
             exeAction["lastname"] = contact.lastname;
             exeAction["emailid"] = contact.emailid;
+            exeAction["upn"] = contact.upn;
 
             string paramsContent;
             if (exeAction.GetType().Name.Equals("JObject"))
@@ -113,6 +114,7 @@ namespace Defra.CustomerMaster.Identity.Api.Dynamics
         /// <returns></returns>
         private Contact ConnectToCRM(HttpRequestMessage request)
         {
+            System.Diagnostics.Trace.TraceInformation("Entered ConnectToCRM Method");
             Configuration config = new Configuration();
             config.Username = _username;
 

@@ -19,7 +19,7 @@ namespace Defra.CustomerMaster.Identity.Api.Model
         public string emailid;
 
         [DataMember]
-        public string UID;
+        public string upn;
 
     }
    
