@@ -24,7 +24,7 @@ namespace Defra.CustomerMaster.Identity.Api
                 if (string.IsNullOrEmpty(UPN) || string.IsNullOrWhiteSpace(UPN))
                     throw new WebFaultException("UPN can not be empty or null",400);
                 Contact crmContact = new CrmApiWrapper().InitialMatch(UPN);
-                ServiceObject returnObj = new ServiceObject() { ServiceUserID = crmContact.contactid.ToString(),ErrorCode=(int)crmContact.HttpStatusCode, ErrorMsg=crmContact.Code=="0"?null:crmContact.Message};
+                ServiceObject returnObj = new ServiceObject() { ServiceUserID = crmContact.contactid,ErrorCode=(int)crmContact.HttpStatusCode, ErrorMsg=crmContact.Message};
 
                 //return string.Format1("ServicieU1serID is: {0}", );
                 return JsonConvert.SerializeObject(returnObj);
@@ -49,7 +49,7 @@ namespace Defra.CustomerMaster.Identity.Api
                     throw new WebFaultException("UPN can not be empty or null",401);
                 }
                 Contact crmContact = new CrmApiWrapper().UserInfo(contact);
-                ServiceObject returnObj = new ServiceObject() { ServiceUserID = crmContact.contactid.ToString() ,ErrorCode=(int)crmContact.HttpStatusCode, ErrorMsg = crmContact.Code == "0" ? null : crmContact.Message };
+                ServiceObject returnObj = new ServiceObject() { ServiceUserID = crmContact.contactid ,ErrorCode=(int)crmContact.HttpStatusCode, ErrorMsg=crmContact.Message };
 
                 //return string.Format1("ServicieU1serID is: {0}", );
                 return JsonConvert.SerializeObject(returnObj);

@@ -147,7 +147,8 @@ namespace Defra.CustomerMaster.Identity.Api.Dynamics
             var content = contactResponse.Content.ReadAsStringAsync().Result;           
 
             var contact = JsonConvert.DeserializeObject<Contact>(content);
-            contact.HttpStatusCode = contactResponse.StatusCode;
+            contact.HttpStatusCode = contact.Code == 0 ? contactResponse.StatusCode : System.Net.HttpStatusCode.BadRequest;
+            
             return contact;
         }
     }

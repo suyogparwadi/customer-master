@@ -8,7 +8,7 @@ namespace Defra.CustomerMaster.Identity.Api.Model
     public class Contact
     {
         [DataMember]
-        public Nullable<Guid> contactid;
+        public string contactid;
 
         [DataMember]
         public string firstname;
@@ -22,11 +22,16 @@ namespace Defra.CustomerMaster.Identity.Api.Model
         [DataMember]
         public string upn;
 
-        public string Code;
-        public string Message;
-        public string MessageDetail;      
-     
+        [DataMember]
+        public int Code;
 
+        [DataMember]
+        public string Message;
+
+        [DataMember]
+        public string MessageDetail;
+
+        [DataMember]
         public HttpStatusCode HttpStatusCode;
 
     }
