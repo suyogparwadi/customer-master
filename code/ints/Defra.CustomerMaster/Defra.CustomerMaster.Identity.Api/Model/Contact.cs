@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Runtime.Serialization;
 
 namespace Defra.CustomerMaster.Identity.Api.Model
@@ -20,6 +21,13 @@ namespace Defra.CustomerMaster.Identity.Api.Model
 
         [DataMember]
         public string upn;
+
+        public string Code;
+        public string Message;
+        public string MessageDetail;      
+     
+
+        public HttpStatusCode HttpStatusCode;
 
     }
    

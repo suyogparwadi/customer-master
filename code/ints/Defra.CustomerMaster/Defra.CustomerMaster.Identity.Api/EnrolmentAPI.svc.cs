@@ -2,6 +2,7 @@
 using Defra.CustomerMaster.Identity.Api.Model;
 using Newtonsoft.Json;
 using System;
+using System.Net.Http;
 
 namespace Defra.CustomerMaster.Identity.Api
 {
@@ -21,15 +22,19 @@ namespace Defra.CustomerMaster.Identity.Api
                 System.Diagnostics.Trace.TraceError(UPN);
                 //return string.Format("ServicieUserID is: {0}", new CrmApiWrapper().InitialMatch(UPN));
                 if (string.IsNullOrEmpty(UPN) || string.IsNullOrWhiteSpace(UPN))
-                    throw new ApplicationException("UPN can not be empty or null");
+                    throw new WebFaultException("UPN can not be empty or null",400);
                 Contact crmContact = new CrmApiWrapper().InitialMatch(UPN);
-                ServiceObject returnObj = new ServiceObject() { ServiceUserID = crmContact.contactid.ToString() };
+                ServiceObject returnObj = new ServiceObject() { ServiceUserID = crmContact.contactid.ToString(),ErrorCode=(int)crmContact.HttpStatusCode, ErrorMsg=crmContact.Code=="0"?null:crmContact.Message};
 
                 //return string.Format1("ServicieU1serID is: {0}", );
                 return JsonConvert.SerializeObject(returnObj);
             }
-            catch (Exception ex)
+            catch (WebFaultException ex)
             {
+                 return JsonConvert.SerializeObject(new ServiceObject() { ServiceUserID = null, ErrorMsg = ex.ErrorMsg,ErrorCode=ex.HttpStatusCode});
+            }
+            catch (Exception ex)
+            {               
                 return JsonConvert.SerializeObject(new ServiceObject() { ServiceUserID = null,ErrorMsg=ex.Message });
             }
         }
@@ -41,18 +46,23 @@ namespace Defra.CustomerMaster.Identity.Api
                 //Contact contactRequest = new Contact() { firstname = "test", lastName = "test", emailid = "testfromwcf@test.com2" };
                 if((contact== null)|| string.IsNullOrEmpty(contact.upn))
                 {
-                    throw new ApplicationException("UPN can not be empty or null");
+                    throw new WebFaultException("UPN can not be empty or null",401);
                 }
                 Contact crmContact = new CrmApiWrapper().UserInfo(contact);
-                ServiceObject returnObj = new ServiceObject() { ServiceUserID = crmContact.contactid.ToString() };
+                ServiceObject returnObj = new ServiceObject() { ServiceUserID = crmContact.contactid.ToString() ,ErrorCode=(int)crmContact.HttpStatusCode, ErrorMsg = crmContact.Code == "0" ? null : crmContact.Message };
 
                 //return string.Format1("ServicieU1serID is: {0}", );
                 return JsonConvert.SerializeObject(returnObj);
 
             }
+            catch (WebFaultException ex)
+            {                
+               return JsonConvert.SerializeObject(new ServiceObject() { ServiceUserID = null, ErrorMsg = ex.ErrorMsg, ErrorCode = ex.HttpStatusCode });
+            }
             catch (Exception ex)
             {
-                return JsonConvert.SerializeObject(new ServiceObject() { ServiceUserID = null,ErrorMsg=ex.Message});
+                // throw new WebFaultException(customError, HttpStatusCode.NotFound);
+                return JsonConvert.SerializeObject(new ServiceObject() { ServiceUserID = null, ErrorMsg = ex.Message });
             }
         }
     }

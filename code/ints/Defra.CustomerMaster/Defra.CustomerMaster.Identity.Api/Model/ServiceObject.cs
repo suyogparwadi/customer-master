@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Runtime.Serialization;
 
 
@@ -10,6 +11,9 @@ namespace Defra.CustomerMaster.Identity.Api
     {
         [DataMember]
         public string ServiceUserID;
+
+        [DataMember]
+        public int ErrorCode;
 
         [DataMember]
         public string ErrorMsg;

@@ -86,7 +86,7 @@ namespace Defra.CustomerMaster.Identity.Api.Dynamics
             exeAction["firstname"] = contact.firstname;
             exeAction["lastname"] = contact.lastname;
             exeAction["emailid"] = contact.emailid;
-            exeAction["upn"] = contact.upn;
+            exeAction["UPN"] = contact.upn;
 
             string paramsContent;
             if (exeAction.GetType().Name.Equals("JObject"))
@@ -137,16 +137,19 @@ namespace Defra.CustomerMaster.Identity.Api.Dynamics
             //httpClient.DefaultRequestHeaders.Add("Authorization", $"Bearer {auth.AcquireToken().AccessToken}");
 
             var contactResponse = httpClient.SendAsync(request).Result;
-
+            
             if (!contactResponse.IsSuccessStatusCode)
             {
-                return null;
+                throw new WebFaultException(contactResponse.ReasonPhrase, (int)contactResponse.StatusCode);
+                
+                //throw excepreturn null;
             }
-            var content = contactResponse.Content.ReadAsStringAsync().Result;
-
+            var content = contactResponse.Content.ReadAsStringAsync().Result;           
 
             var contact = JsonConvert.DeserializeObject<Contact>(content);
-            return contact;         }
+            contact.HttpStatusCode = contactResponse.StatusCode;
+            return contact;
+        }
     }
 
 }

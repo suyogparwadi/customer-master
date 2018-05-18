@@ -56,7 +56,7 @@ namespace Defra.CustomerMaster.Identity.API.UnitTest
                 RequestFormat = DataFormat.Json
 
             };
-            Contact contactContent = new Contact() { firstname = "testfirst", lastname = "testlast", emailid = "test0905200@test.com" };
+            Contact contactContent = new Contact() { firstname = "testfirst", lastname = "testlast", emailid = "test0905200@test.com",upn= "123 - 123" };
             //string contactJson = JsonConvert.SerializeObject(contactContent);
 
             request.AddBody(contactContent);
