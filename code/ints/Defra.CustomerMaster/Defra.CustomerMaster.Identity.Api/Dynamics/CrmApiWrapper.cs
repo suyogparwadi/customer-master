@@ -86,7 +86,7 @@ namespace Defra.CustomerMaster.Identity.Api.Dynamics
             exeAction["firstname"] = contact.firstname;
             exeAction["lastname"] = contact.lastname;
             exeAction["emailid"] = contact.emailid;
-            exeAction["UPN"] = contact.upn;
+            exeAction["UPN"] = contact.UPN;
 
             string paramsContent;
             if (exeAction.GetType().Name.Equals("JObject"))
