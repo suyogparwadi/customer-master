@@ -19,7 +19,7 @@ namespace Defra.CustomerMaster.Identity.Api
         {
             try
             {
-                System.Diagnostics.Trace.TraceError(UPN);
+                System.Diagnostics.Trace.TraceError("IntialMatch call:"+UPN);
                 //return string.Format("ServicieUserID is: {0}", new CrmApiWrapper().InitialMatch(UPN));
                 if (string.IsNullOrEmpty(UPN) || string.IsNullOrWhiteSpace(UPN))
                     throw new WebFaultException("UPN can not be empty or null",400);
@@ -31,10 +31,12 @@ namespace Defra.CustomerMaster.Identity.Api
             }
             catch (WebFaultException ex)
             {
-                 return JsonConvert.SerializeObject(new ServiceObject() { ServiceUserID = null, ErrorMsg = ex.ErrorMsg,ErrorCode=ex.HttpStatusCode});
+                System.Diagnostics.Trace.TraceError(ex.Message);
+                return JsonConvert.SerializeObject(new ServiceObject() { ServiceUserID = null, ErrorMsg = ex.ErrorMsg,ErrorCode=ex.HttpStatusCode});
             }
             catch (Exception ex)
-            {               
+            {
+                System.Diagnostics.Trace.TraceError(ex.Message);
                 return JsonConvert.SerializeObject(new ServiceObject() { ServiceUserID = null,ErrorMsg=ex.Message });
             }
         }
@@ -43,10 +45,15 @@ namespace Defra.CustomerMaster.Identity.Api
         {
             try
             {
+                System.Diagnostics.Trace.TraceError("UserInfo call params:{0},{1}",contact.upn,contact.emailid);
                 //Contact contactRequest = new Contact() { firstname = "test", lastName = "test", emailid = "testfromwcf@test.com2" };
-                if((contact== null)|| string.IsNullOrEmpty(contact.upn))
+                if ((contact== null)|| string.IsNullOrEmpty(contact.upn))
                 {
                     throw new WebFaultException("UPN can not be empty or null",401);
+                }
+                if ((contact == null) || string.IsNullOrEmpty(contact.lastname))
+                {
+                    throw new WebFaultException("lastname can not be empty or null", 401);
                 }
                 Contact crmContact = new CrmApiWrapper().UserInfo(contact);
                 ServiceObject returnObj = new ServiceObject() { ServiceUserID = crmContact.contactid ,ErrorCode=(int)crmContact.HttpStatusCode, ErrorMsg=crmContact.Message };
@@ -56,11 +63,13 @@ namespace Defra.CustomerMaster.Identity.Api
 
             }
             catch (WebFaultException ex)
-            {                
-               return JsonConvert.SerializeObject(new ServiceObject() { ServiceUserID = null, ErrorMsg = ex.ErrorMsg, ErrorCode = ex.HttpStatusCode });
+            {
+                System.Diagnostics.Trace.TraceError(ex.Message);
+                return JsonConvert.SerializeObject(new ServiceObject() { ServiceUserID = null, ErrorMsg = ex.ErrorMsg, ErrorCode = ex.HttpStatusCode });
             }
             catch (Exception ex)
             {
+                System.Diagnostics.Trace.TraceError(ex.Message);
                 // throw new WebFaultException(customError, HttpStatusCode.NotFound);
                 return JsonConvert.SerializeObject(new ServiceObject() { ServiceUserID = null, ErrorMsg = ex.Message });
             }

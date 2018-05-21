@@ -11,15 +11,13 @@ namespace Defra.CustomerMaster.Identity.API.UnitTest
     [TestClass]
     public class EnrolmentAPITest
     {
-        string Url = "http://localhost:3409/EnrolmentAPI.svc/";//"https://defra-custmast-dev.crm4.dynamics.com/";
-
+        const string URL = "http://localhost:3409/EnrolmentAPI.svc/";//"https://defra-custmast-dev.crm4.dynamics.com/";
+        string _serviceID = null;
 
         [TestMethod]
         public void InitialMatchTest()
-        {
-
-            string serviceID = "ab5fb791-624c-e811-a834-000d3a2b2be0";
-            var client = new RestClient(Url);
+        {            
+            var client = new RestClient(URL);
             // var key = ApplicationAuthenticator.GetS2SAccessTokenForProdMSAAsync();
             var request = new RestRequest("InitialMatch/123", Method.GET);
 
@@ -37,26 +35,26 @@ namespace Defra.CustomerMaster.Identity.API.UnitTest
                 content = content.Remove(content.Length - 1, 1);
                 content = content.Replace("\\", "");
                 ServiceObject returnValue = JsonConvert.DeserializeObject<ServiceObject>(content);
-                Assert.AreEqual(serviceID, returnValue.ServiceUserID);
+                Assert.IsNotNull(returnValue.ServiceUserID);
+             
             }
 
 
         }
 
         [TestMethod]
-        public void UserInfoTest()
+        public void UserInfoTestWithContactCreate()
         {
-            string serviceID = "2e0c1b70-f24d-e811-a83e-000d3a2b2ba3";
             var action = new Action<IRestResponse<object>, RestRequestAsyncHandle>(CallbackResponse);
 
-            var client = new RestClient(Url);
+            var client = new RestClient(URL);
             // var key = ApplicationAuthenticator.GetS2SAccessTokenForProdMSAAsync();
             var request = new RestRequest("UserInfo/", Method.PUT)
             {
                 RequestFormat = DataFormat.Json
 
             };
-            Contact contactContent = new Contact() { firstname = "testfirst", lastname = "testlast", emailid = "test0905200@test.com",upn= "123 - 123" };
+            Contact contactContent = new Contact() {lastname = "UnitTestUser", emailid = "UnitTestUser@test.com", upn= "UnitTestUser123" };
             //string contactJson = JsonConvert.SerializeObject(contactContent);
 
             request.AddBody(contactContent);
@@ -71,7 +69,45 @@ namespace Defra.CustomerMaster.Identity.API.UnitTest
                 content = content.Remove(content.Length - 1, 1).Replace("\\", "");
 
                 ServiceObject returnValue = JsonConvert.DeserializeObject<ServiceObject>(content);
-                Assert.AreEqual(serviceID, returnValue.ServiceUserID);
+                Assert.IsNotNull(returnValue.ServiceUserID);
+                _serviceID = returnValue.ServiceUserID;
+                Assert.AreEqual(_serviceID, returnValue.ServiceUserID);
+                
+            }
+
+        }
+
+        [TestMethod]
+        public void UserInfoTestWithContactUpdate()
+        {            
+            var action = new Action<IRestResponse<object>, RestRequestAsyncHandle>(CallbackResponse);
+
+            var client = new RestClient(URL);
+            // var key = ApplicationAuthenticator.GetS2SAccessTokenForProdMSAAsync();
+            var request = new RestRequest("UserInfo/", Method.PUT)
+            {
+                RequestFormat = DataFormat.Json
+
+            };
+            Contact contactContent = new Contact() { lastname = "UnitTestUser", emailid = "UnitTestUser@test.com", upn = "UnitTestUser123" };
+            //string contactJson = JsonConvert.SerializeObject(contactContent);
+
+            request.AddBody(contactContent);
+            request.AddHeader("Accept", "*/*");
+            request.AddHeader("Content-Type", "application/json");
+
+            var response = client.Put(request);
+            Thread.Sleep(1000);
+            if (!string.IsNullOrEmpty(response.Content))
+            {
+                string content = response.Content.Remove(0, 1);
+                content = content.Remove(content.Length - 1, 1).Replace("\\", "");
+
+                ServiceObject returnValue = JsonConvert.DeserializeObject<ServiceObject>(content);
+                Assert.IsNotNull(returnValue.ServiceUserID);
+                _serviceID = returnValue.ServiceUserID;
+                Assert.AreEqual(_serviceID, returnValue.ServiceUserID);
+
             }
 
         }
