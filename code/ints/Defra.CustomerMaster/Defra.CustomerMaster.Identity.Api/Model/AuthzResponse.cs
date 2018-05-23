@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Web;
 
@@ -7,13 +8,23 @@ namespace Defra.CustomerMaster.Identity.Api.Model
     [DataContract]
     public class AuthzResponse
     {
-        [DataMember]
+        [DataMember(Order =0)]
         public string version;
 
-        [DataMember]
+        [DataMember(Order = 1)]
         public int status;
 
+        [DataMember(Order = 2)]
+        //public string roles;
+        public List<string> roles { get; set; }
+        [DataMember(Order = 3)]
+        public List<string> mappings { get; set; }
+    }
+
+    [DataContract]
+    public class Mappings
+    {
         [DataMember]
-        public string roles;
+        public List<string> map { get; set; }
     }
 }

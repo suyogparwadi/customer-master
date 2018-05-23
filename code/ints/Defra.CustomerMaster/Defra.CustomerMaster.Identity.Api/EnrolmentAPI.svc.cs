@@ -2,7 +2,8 @@
 using Defra.CustomerMaster.Identity.Api.Model;
 using Newtonsoft.Json;
 using System;
-using System.Net.Http;
+using System.Collections.Generic;
+
 
 namespace Defra.CustomerMaster.Identity.Api
 {
@@ -12,7 +13,9 @@ namespace Defra.CustomerMaster.Identity.Api
         public AuthzResponse Authz(string ServiceID, string UPN)
         {
             //return JsonConvert.SerializeObject(new AuthzResponse { status="200", version="1.0.0.0", roles = "role1:role2:role3:role4" });
-            return new AuthzResponse { status = 200, version = "1.0.0.0", roles = "role1:role2:role3:role4" };
+            return new AuthzResponse { status = 200, version = "1.0.0.0",
+                roles = new List<string>() { "ORG1GUID:Role1GUID", "ORG1GUID:Role2GUID", "ORG2GUID:Role21GUID" },
+                mappings = new List<string>() { "ORG1GUID:ORG1NAME", "ORG2GUID:ORG2NAME", "Role1GUID:Role1Name", "Role2GUID:Role2Name", "Role21GUID:Role21Name" } };
         }
 
         public string InitialMatch(string UPN)
