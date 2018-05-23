@@ -87,6 +87,7 @@
     </Compile>
     <Compile Include="IEnrolmentAPI​​.cs" />
     <Compile Include="Model\ServiceObject.cs" />
+    <Compile Include="Model\ServiceUserLinks.cs" />
     <Compile Include="Model\WebFaultException.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
