@@ -9,12 +9,12 @@ namespace Defra.CustomerMaster.Identity.Api
 
     public class EnrolmentAPI : IEnrolmentAPI
     {
-        public string Authz(string ServiceID, string UPN)
+        public AuthzResponse Authz(string ServiceID, string UPN)
         {
             ServiceUserLinks serviceUserLinks = new CrmApiWrapper().Authz(ServiceID,UPN);
-            return JsonConvert.SerializeObject(serviceUserLinks.value);
+            //return JsonConvert.SerializeObject(serviceUserLinks.value);
             //return JsonConvert.SerializeObject(new AuthzResponse { status="200", version="1.0.0.0", roles = "role1:role2:role3:role4" });
-            //return new AuthzResponse { status = 200, version = "1.0.0.0", roles = "role1:role2:role3:role4" };
+            return new AuthzResponse { status = 200, version = "1.0.0.0", roles = "role1:role2:role3:role4" };
         }
 
         public string InitialMatch(string UPN)
