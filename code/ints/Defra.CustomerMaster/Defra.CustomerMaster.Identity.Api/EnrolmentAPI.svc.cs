@@ -12,6 +12,8 @@ namespace Defra.CustomerMaster.Identity.Api
     {
         public AuthzResponse Authz(string ServiceID, string UPN)
         {
+            ServiceUserLinks serviceUserLinks = new CrmApiWrapper().Authz(ServiceID,UPN);
+            //return JsonConvert.SerializeObject(serviceUserLinks.value);
             //return JsonConvert.SerializeObject(new AuthzResponse { status="200", version="1.0.0.0", roles = "role1:role2:role3:role4" });
             return new AuthzResponse { status = 200, version = "1.0.0.0",
                 roles = new List<string>() { "ORG1GUID:Role1GUID", "ORG1GUID:Role2GUID", "ORG2GUID:Role21GUID" },
@@ -48,9 +50,9 @@ namespace Defra.CustomerMaster.Identity.Api
         {
             try
             {
-                System.Diagnostics.Trace.TraceError("UserInfo call params:{0},{1}",contact.upn,contact.emailid);
+                System.Diagnostics.Trace.TraceError("UserInfo call params:{0},{1}",contact.UPN,contact.emailid);
                 //Contact contactRequest = new Contact() { firstname = "test", lastName = "test", emailid = "testfromwcf@test.com2" };
-                if ((contact== null)|| string.IsNullOrEmpty(contact.upn))
+                if ((contact== null)|| string.IsNullOrEmpty(contact.UPN))
                 {
                     throw new WebFaultException("UPN can not be empty or null",401);
                 }
@@ -66,7 +68,7 @@ namespace Defra.CustomerMaster.Identity.Api
 
             }
             catch (WebFaultException ex)
-            {
+            {                
                 System.Diagnostics.Trace.TraceError(ex.Message);
                 return JsonConvert.SerializeObject(new ServiceObject() { ServiceUserID = null, ErrorMsg = ex.ErrorMsg, ErrorCode = ex.HttpStatusCode });
             }

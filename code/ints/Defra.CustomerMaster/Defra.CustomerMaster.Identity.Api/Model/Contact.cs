@@ -8,6 +8,7 @@ namespace Defra.CustomerMaster.Identity.Api.Model
     public class Contact
     {
         [DataMember]
+        
         public string contactid;
 
         [DataMember]
@@ -20,7 +21,7 @@ namespace Defra.CustomerMaster.Identity.Api.Model
         public string emailid;
 
         [DataMember]
-        public string upn;
+        public string UPN;
 
         [DataMember]
         public int Code;

@@ -72,8 +72,14 @@ namespace Defra.CustomerMaster.Identity.Api.Dynamics
             request.Content = new StringContent(paramsContent);
             request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
 
-            Contact jsonValue = ConnectToCRM(request);
-            return jsonValue;
+            HttpResponseMessage responseContent = ConnectToCRM(request);
+
+            var content = responseContent.Content.ReadAsStringAsync().Result;
+
+            Contact contactResponse = JsonConvert.DeserializeObject<Contact>(content);
+            contactResponse.HttpStatusCode = contactResponse.Code == 0 ? responseContent.StatusCode : System.Net.HttpStatusCode.BadRequest;
+
+            return contactResponse;
         }
 
         /// <summary>
@@ -86,7 +92,7 @@ namespace Defra.CustomerMaster.Identity.Api.Dynamics
             exeAction["firstname"] = contact.firstname;
             exeAction["lastname"] = contact.lastname;
             exeAction["emailid"] = contact.emailid;
-            exeAction["UPN"] = contact.upn;
+            exeAction["UPN"] = contact.UPN;
 
             string paramsContent;
             if (exeAction.GetType().Name.Equals("JObject"))
@@ -100,19 +106,76 @@ namespace Defra.CustomerMaster.Identity.Api.Dynamics
             HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Post, _resource + "api/data/v8.2/defra_UpsertContact");
             request.Content = new StringContent(paramsContent);
             request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
-            Contact value=ConnectToCRM(request);
+            HttpResponseMessage responseContent=ConnectToCRM(request);
 
-            return value;
+            var content = responseContent.Content.ReadAsStringAsync().Result;
+
+            Contact contactResponse = JsonConvert.DeserializeObject<Contact>(content);
+            contactResponse.HttpStatusCode = contactResponse.Code == 0 ? responseContent.StatusCode : System.Net.HttpStatusCode.BadRequest;
+
+            return contactResponse;
 
 
         }
-
         /// <summary>
         /// 
         /// </summary>
-        /// <param name="request"></param>
+        /// <param name="ServiceID"></param>
+        /// <param name="UPN"></param>
         /// <returns></returns>
-        private Contact ConnectToCRM(HttpRequestMessage request)
+        public ServiceUserLinks Authz(string ServiceID, string UPN)
+        {
+           // string contactID = "{FBE71069-F54D-E811-A83E-000D3A2B2ACB}";
+            //ServiceID = "{266B0F4D-E32A-E811-A836-000D3A2B2ACB}";
+
+
+            //string fetchXmlRequest = "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'><entity name='defra_lobserviceuserlink'><attribute name='defra_lobserviceuserlinkid'/>"+
+            //"<attribute name='defra_name'/><attribute name='createdon'/><attribute name='defra_serviceuser'/><attribute name='defra_servicerole'/><order attribute='defra_name' descending ='false'/>"+
+            //"<filter type='and'><condition attribute='statecode' operator='eq' value='0'/>"+       
+            //"<condition attribute='defra_serviceuser' operator='eq' uiname='bilal test' uitype='contact' value='{FBE71069-F54D-E811-A83E-000D3A2B2ACB}'/></filter>"+
+            //"<link-entity name='contact' from='contactid' to='defra_serviceuser' visible='false' link-type='outer' alias='servicelinkcontact'><attribute name='fullname'/></link-entity>"+
+            //"<link-entity name='defra_lobserivcerole' from='defra_lobserivceroleid' to='defra_servicerole' link-type='inner' alias='servicelinkrole'>"+
+            //"<attribute name='defra_rolename'/><attribute name ='defra_name'/><filter type='and'>"+
+            //"<condition attribute='defra_lobservice' operator='eq' uiname='Environmental planning' uitype='defra_lobservice' value='{266B0F4D-E32A-E811-A836-000D3A2B2ACB}'/> "+                                                            
+            //"</filter></link-entity></entity></fetch>";
+
+
+            // string fetchXmlRequest = "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'><entity name='defra_lobserviceuserlink'><attribute name='defra_lobserviceuserlinkid'/>" +
+            //"<attribute name='defra_name'/><attribute name='createdon'/><attribute name='defra_serviceuser'/><attribute name='defra_servicerole'/><order attribute='defra_name' descending ='false'/>" +
+            //"<filter type='and'><condition attribute='statecode' operator='eq' value='0'/>" +
+            //"<condition attribute='defra_serviceuser' operator='eq' uiname='bilal test' uitype='contact' value='" + contactID+"'/></filter>" +
+            //"<link-entity name='contact' from='contactid' to='defra_serviceuser' visible='false' link-type='outer' alias='servicelinkcontact'><attribute name='fullname'/></link-entity>" +
+            //"<link-entity name='defra_lobserivcerole' from='defra_lobserivceroleid' to='defra_servicerole' link-type='inner' alias='servicelinkrole'>" +
+            //"<attribute name='defra_rolename'/><attribute name ='defra_name'/><filter type='and'>" +
+            //"<condition attribute='defra_lobservice' operator='eq' uiname='Environmental planning' uitype='defra_lobservice' value='" + ServiceID+"'/> " +
+            //"</filter></link-entity></entity></fetch>";
+
+            string fetchXmlRequest = "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'><entity name='defra_lobserviceuserlink'>" +
+              "<attribute name='defra_lobserviceuserlinkid'/><attribute name='defra_name'/>" +
+              "<attribute name='createdon'/><attribute name='defra_serviceuser'/><attribute name='defra_servicerole'/>" +
+              "<order attribute='defra_name' descending='false'/><filter type='and'><condition attribute='statecode' operator='eq' value='0'/></filter>" +
+              "<link-entity name='contact' from='contactid' to='defra_serviceuser' link-type='inner' alias='serviceLinkContact'>" +
+              "<attribute name='fullname'/><filter type='and'><condition attribute='defra_upn' operator='eq' value='" + UPN + "'/></filter>" +
+              "</link-entity><link-entity name='defra_lobserivcerole' from='defra_lobserivceroleid' to='defra_servicerole' link-type='inner' alias='serviceLinkRole'>" +
+              "<attribute name='defra_rolename'/><attribute name='defra_name'/><attribute name='defra_lobserivceroleid'/><filter type='and'>" +
+              "<condition attribute='defra_lobservice' operator='eq' uitype='defra_lobservice' value='{" + ServiceID + "}'/>" +
+              "</filter></link-entity><link-entity name='account' from='accountid' to='defra_organisation' visible='false' link-type='outer' alias='serviceLinkOrganisation'>"+
+              "<attribute name='name'/><attribute name='accountid'/></link-entity></entity></fetch>";
+
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, _resource + "api/data/v8.2/defra_lobserviceuserlinks?fetchXml="+fetchXmlRequest);
+            //request.Content = new StringContent(paramsContent);
+            //request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+            HttpResponseMessage responseContent = ConnectToCRM(request);
+            var content = responseContent.Content.ReadAsStringAsync().Result;
+            ServiceUserLinks contentResponse = JsonConvert.DeserializeObject<ServiceUserLinks>(content);
+            return contentResponse;
+        }
+            /// <summary>
+            /// 
+            /// </summary>
+            /// <param name="request"></param>
+            /// <returns></returns>
+            private HttpResponseMessage ConnectToCRM(HttpRequestMessage request)
         {
             System.Diagnostics.Trace.TraceInformation("Entered ConnectToCRM Method");
             Configuration config = new Configuration();
@@ -144,12 +207,7 @@ namespace Defra.CustomerMaster.Identity.Api.Dynamics
                 
                 //throw excepreturn null;
             }
-            var content = contactResponse.Content.ReadAsStringAsync().Result;           
-
-            var contact = JsonConvert.DeserializeObject<Contact>(content);
-            contact.HttpStatusCode = contact.Code == 0 ? contactResponse.StatusCode : System.Net.HttpStatusCode.BadRequest;
-            
-            return contact;
+            return contactResponse;
         }
     }
 
