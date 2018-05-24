@@ -10,17 +10,46 @@ namespace Defra.CustomerMaster.Identity.Api
 
     public class EnrolmentAPI : IEnrolmentAPI
     {
+        /// <summary>
+        /// Authz call 
+        /// </summary>
+        /// <param name="ServiceID"></param>
+        /// <param name="UPN"></param>
+        /// <returns> return new AuthzResponse { status = 200, version = "1.0.0.0",
+        /// roles = new List<string>() { "ORG1GUID:Role1GUID", "ORG1GUID:Role2GUID", "ORG2GUID:Role21GUID" },
+        ///       mappings = new List<string>() { "ORG1GUID:ORG1NAME", "ORG2GUID:ORG2NAME", "Role1GUID:Role1Name", "Role2GUID:Role2Name", "Role21GUID:Role21Name" } };</returns>
+
+        //public List<ServiceUserLink> Authz(string ServiceID, string UPN)
         public AuthzResponse Authz(string ServiceID, string UPN)
         {
-            ServiceUserLinks serviceUserLinks = new CrmApiWrapper().Authz(ServiceID,UPN);
-            //return JsonConvert.SerializeObject(serviceUserLinks.value);
-            //return JsonConvert.SerializeObject(new AuthzResponse { status="200", version="1.0.0.0", roles = "role1:role2:role3:role4" });
-            return new AuthzResponse { status = 200, version = "1.0.0.0",
-                roles = new List<string>() { "ORG1GUID:Role1GUID", "ORG1GUID:Role2GUID", "ORG2GUID:Role21GUID" },
-                mappings = new List<string>() { "ORG1GUID:ORG1NAME", "ORG2GUID:ORG2NAME", "Role1GUID:Role1Name", "Role2GUID:Role2Name", "Role21GUID:Role21Name" } };
+            ServiceUserLinks serviceUserLinks = new CrmApiWrapper().Authz(ServiceID,UPN);            
+            //return serviceUserLinks.value;
+            List<string> rolesList = new List<string>();
+            List<string> mappingsList = new List<string>();
+            foreach(ServiceUserLink serviceUserLink in serviceUserLinks.value)
+            {
+                rolesList.Add(serviceUserLink.OrganisationId + ":" + serviceUserLink.RoleId);
+                mappingsList.Add(serviceUserLink.OrganisationId + ":" + serviceUserLink.OrganisationName);
+                mappingsList.Add(serviceUserLink.RoleId + ":" + serviceUserLink.RoleName);
+            }
+            return new AuthzResponse
+            {
+                status = 200,
+                version = "1.0.0.0",
+                roles = rolesList,
+                mappings = mappingsList
+            };
+
         }
 
-        public string InitialMatch(string UPN)
+        /// <summary>
+        /// InitialMatch
+        /// </summary>
+        /// <param name="UPN"></param>
+        /// <returns>{    "ErrorCode": 200,    "ErrorMsg": null,   
+        /// "ServiceUserID": "ec11676a-d85a-e811-a832-000d3a27889d"}
+        /// </returns>
+        public ServiceObject InitialMatch(string UPN)
         {
             try
             {
@@ -30,28 +59,36 @@ namespace Defra.CustomerMaster.Identity.Api
                     throw new WebFaultException("UPN can not be empty or null",400);
                 Contact crmContact = new CrmApiWrapper().InitialMatch(UPN);
                 ServiceObject returnObj = new ServiceObject() { ServiceUserID = crmContact.contactid,ErrorCode=(int)crmContact.HttpStatusCode, ErrorMsg=crmContact.Message};
-
-                //return string.Format1("ServicieU1serID is: {0}", );
-                return JsonConvert.SerializeObject(returnObj);
+                return returnObj;                
+                //return JsonConvert.SerializeObject(returnObj);
             }
             catch (WebFaultException ex)
             {
                 System.Diagnostics.Trace.TraceError(ex.Message);
-                return JsonConvert.SerializeObject(new ServiceObject() { ServiceUserID = null, ErrorMsg = ex.ErrorMsg,ErrorCode=ex.HttpStatusCode});
+                return (new ServiceObject() { ServiceUserID = null, ErrorMsg = ex.ErrorMsg, ErrorCode = ex.HttpStatusCode });
+               // return JsonConvert.SerializeObject(new ServiceObject() { ServiceUserID = null, ErrorMsg = ex.ErrorMsg,ErrorCode=ex.HttpStatusCode});
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Trace.TraceError(ex.Message);
-                return JsonConvert.SerializeObject(new ServiceObject() { ServiceUserID = null,ErrorMsg=ex.Message });
+                return (new ServiceObject() { ServiceUserID = null, ErrorMsg = ex.Message });
+                //return JsonConvert.SerializeObject(new ServiceObject() { ServiceUserID = null,ErrorMsg=ex.Message });
             }
         }
 
-        public string UserInfo(Contact contact)
+        /// <summary>
+        /// UserInfo
+        /// </summary>
+        /// <param name="contact"></param>
+        /// <returns>{    "ErrorCode": 200,    "ErrorMsg": "",
+        /// "ServiceUserID": "b56748e5-dd5a-e811-a838-000d3a2b2b9f"
+        /// }</returns>
+        public ServiceObject UserInfo(Contact contact)
         {
             try
             {
                 System.Diagnostics.Trace.TraceError("UserInfo call params:{0},{1}",contact.UPN,contact.emailid);
-                //Contact contactRequest = new Contact() { firstname = "test", lastName = "test", emailid = "testfromwcf@test.com2" };
+                
                 if ((contact== null)|| string.IsNullOrEmpty(contact.UPN))
                 {
                     throw new WebFaultException("UPN can not be empty or null",401);
@@ -63,20 +100,20 @@ namespace Defra.CustomerMaster.Identity.Api
                 Contact crmContact = new CrmApiWrapper().UserInfo(contact);
                 ServiceObject returnObj = new ServiceObject() { ServiceUserID = crmContact.contactid ,ErrorCode=(int)crmContact.HttpStatusCode, ErrorMsg=crmContact.Message };
 
-                //return string.Format1("ServicieU1serID is: {0}", );
-                return JsonConvert.SerializeObject(returnObj);
+                return returnObj;// JsonConvert.SerializeObject(returnObj);
 
             }
             catch (WebFaultException ex)
             {                
                 System.Diagnostics.Trace.TraceError(ex.Message);
-                return JsonConvert.SerializeObject(new ServiceObject() { ServiceUserID = null, ErrorMsg = ex.ErrorMsg, ErrorCode = ex.HttpStatusCode });
+                return (new ServiceObject() { ServiceUserID = null, ErrorMsg = ex.ErrorMsg, ErrorCode = ex.HttpStatusCode });
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Trace.TraceError(ex.Message);
                 // throw new WebFaultException(customError, HttpStatusCode.NotFound);
-                return JsonConvert.SerializeObject(new ServiceObject() { ServiceUserID = null, ErrorMsg = ex.Message });
+               // return JsonConvert.SerializeObject(new ServiceObject() { ServiceUserID = null, ErrorMsg = ex.Message });
+                return (new ServiceObject() { ServiceUserID = null, ErrorMsg = ex.Message });
             }
         }
     }

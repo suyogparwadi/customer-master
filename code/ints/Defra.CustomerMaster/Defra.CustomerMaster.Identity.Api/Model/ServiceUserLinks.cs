@@ -3,44 +3,59 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.Serialization;
 using System.Web;
-
+using Newtonsoft.Json;
 namespace Defra.CustomerMaster.Identity.Api.Model
 {
     [DataContract]
     public class ServiceUserLink
     {
-        [DataMember]
-        public string createdon;
+        //[DataMember]
+        //public string createdon;
+
+        //[DataMember]
+        //[JsonProperty("defra_lobserviceuserlinkid")]
+        //public string ServiceUserLinkId;
+
+        //[DataMember]
+        //[JsonProperty("defra_name")]
+        //public string defra_name;
+
+        //[DataMember]
+        //[JsonProperty("_defra_serviceuser_value")]
+        //public string _defra_serviceuser_value;
+
+        //[DataMember]
+        //[JsonProperty("defra_ServiceUser")]
+        //public string defra_ServiceUser;
+
+        //[DataMember]
+        //[JsonProperty("_defra_servicerole_value")]
+        //public string _defra_servicerole_value;
+
+        //[DataMember]
+        //[JsonProperty("defra_ServiceRole")]
+        //public string defra_ServiceRole;
 
         [DataMember]
-        public string defra_lobserviceuserlinkid;
+        [JsonProperty("serviceLinkContact_x002e_fullname")]
+        public string ContactName;
 
         [DataMember]
-        public string defra_name;
+        [JsonProperty("serviceLinkRole_x002e_defra_lobserivceroleid")]
+        public string RoleId;       
 
         [DataMember]
-        public string _defra_serviceuser_value;
+        [JsonProperty("serviceLinkRole_x002e_defra_name")]
+        public string RoleName;
 
         [DataMember]
-        public string defra_ServiceUser;
+        [JsonProperty("serviceLinkOrganisation_x002e_accountid")]
+        public string OrganisationId;
 
         [DataMember]
-        public string _defra_servicerole_value;
+        [JsonProperty("serviceLinkOrganisation_x002e_name")]
+        public string OrganisationName;
 
-        [DataMember]
-        public string defra_ServiceRole;
-
-        [DataMember]
-        public string serviceLinkContact_x002e_fullname;
-
-        [DataMember]
-        public string serviceLinkRole_x002e_defra_lobserivceroleid;
-
-        [DataMember]
-        public string serviceLinkOrganisation_x002e_name;
-
-        [DataMember]
-        public string serviceLinkRole_x002e_defra_name;
     }
 
     [DataContract]

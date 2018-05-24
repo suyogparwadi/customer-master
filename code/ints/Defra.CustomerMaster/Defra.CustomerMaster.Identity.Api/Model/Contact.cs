@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Net;
 using System.Runtime.Serialization;
+using System.ComponentModel.DataAnnotations;
 
 namespace Defra.CustomerMaster.Identity.Api.Model
 {
@@ -15,12 +16,14 @@ namespace Defra.CustomerMaster.Identity.Api.Model
         public string firstname;
 
         [DataMember]
+        [Required]
         public string lastname;
 
         [DataMember]
         public string emailid;
 
         [DataMember]
+        [Required]
         public string UPN;
 
         [DataMember]

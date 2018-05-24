@@ -17,10 +17,10 @@ namespace Defra.CustomerMaster.Identity.Api.Dynamics
         private readonly string _clientId;//= "d38f2cff-29d1-43f6-a3e8-4b91baf4b065";
         private readonly string _password;//= "Yizh1TCPXsOMvXbC8Duu";
         private readonly string _resource;// = "https://defra-custmast-dev.api.crm4.dynamics.com";
-        private readonly string _username;// = "aruna.ramidi@defradev.onmicrosoft.com";
+        private readonly string _username;
 
         /// <summary>
-        /// 
+        /// Constructor
         /// </summary>
         public CrmApiWrapper()
         {
@@ -124,31 +124,7 @@ namespace Defra.CustomerMaster.Identity.Api.Dynamics
         /// <param name="UPN"></param>
         /// <returns></returns>
         public ServiceUserLinks Authz(string ServiceID, string UPN)
-        {
-           // string contactID = "{FBE71069-F54D-E811-A83E-000D3A2B2ACB}";
-            //ServiceID = "{266B0F4D-E32A-E811-A836-000D3A2B2ACB}";
-
-
-            //string fetchXmlRequest = "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'><entity name='defra_lobserviceuserlink'><attribute name='defra_lobserviceuserlinkid'/>"+
-            //"<attribute name='defra_name'/><attribute name='createdon'/><attribute name='defra_serviceuser'/><attribute name='defra_servicerole'/><order attribute='defra_name' descending ='false'/>"+
-            //"<filter type='and'><condition attribute='statecode' operator='eq' value='0'/>"+       
-            //"<condition attribute='defra_serviceuser' operator='eq' uiname='bilal test' uitype='contact' value='{FBE71069-F54D-E811-A83E-000D3A2B2ACB}'/></filter>"+
-            //"<link-entity name='contact' from='contactid' to='defra_serviceuser' visible='false' link-type='outer' alias='servicelinkcontact'><attribute name='fullname'/></link-entity>"+
-            //"<link-entity name='defra_lobserivcerole' from='defra_lobserivceroleid' to='defra_servicerole' link-type='inner' alias='servicelinkrole'>"+
-            //"<attribute name='defra_rolename'/><attribute name ='defra_name'/><filter type='and'>"+
-            //"<condition attribute='defra_lobservice' operator='eq' uiname='Environmental planning' uitype='defra_lobservice' value='{266B0F4D-E32A-E811-A836-000D3A2B2ACB}'/> "+                                                            
-            //"</filter></link-entity></entity></fetch>";
-
-
-            // string fetchXmlRequest = "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'><entity name='defra_lobserviceuserlink'><attribute name='defra_lobserviceuserlinkid'/>" +
-            //"<attribute name='defra_name'/><attribute name='createdon'/><attribute name='defra_serviceuser'/><attribute name='defra_servicerole'/><order attribute='defra_name' descending ='false'/>" +
-            //"<filter type='and'><condition attribute='statecode' operator='eq' value='0'/>" +
-            //"<condition attribute='defra_serviceuser' operator='eq' uiname='bilal test' uitype='contact' value='" + contactID+"'/></filter>" +
-            //"<link-entity name='contact' from='contactid' to='defra_serviceuser' visible='false' link-type='outer' alias='servicelinkcontact'><attribute name='fullname'/></link-entity>" +
-            //"<link-entity name='defra_lobserivcerole' from='defra_lobserivceroleid' to='defra_servicerole' link-type='inner' alias='servicelinkrole'>" +
-            //"<attribute name='defra_rolename'/><attribute name ='defra_name'/><filter type='and'>" +
-            //"<condition attribute='defra_lobservice' operator='eq' uiname='Environmental planning' uitype='defra_lobservice' value='" + ServiceID+"'/> " +
-            //"</filter></link-entity></entity></fetch>";
+        {        
 
             string fetchXmlRequest = "<fetch version='1.0' output-format='xml-platform' mapping='logical' distinct='false'><entity name='defra_lobserviceuserlink'>" +
               "<attribute name='defra_lobserviceuserlinkid'/><attribute name='defra_name'/>" +
@@ -162,9 +138,7 @@ namespace Defra.CustomerMaster.Identity.Api.Dynamics
               "</filter></link-entity><link-entity name='account' from='accountid' to='defra_organisation' visible='false' link-type='outer' alias='serviceLinkOrganisation'>"+
               "<attribute name='name'/><attribute name='accountid'/></link-entity></entity></fetch>";
 
-            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, _resource + "api/data/v8.2/defra_lobserviceuserlinks?fetchXml="+fetchXmlRequest);
-            //request.Content = new StringContent(paramsContent);
-            //request.Content.Headers.ContentType = MediaTypeHeaderValue.Parse("application/json");
+            HttpRequestMessage request = new HttpRequestMessage(HttpMethod.Get, _resource + "api/data/v8.2/defra_lobserviceuserlinks?fetchXml="+fetchXmlRequest);          
             HttpResponseMessage responseContent = ConnectToCRM(request);
             var content = responseContent.Content.ReadAsStringAsync().Result;
             ServiceUserLinks contentResponse = JsonConvert.DeserializeObject<ServiceUserLinks>(content);
@@ -192,7 +166,6 @@ namespace Defra.CustomerMaster.Identity.Api.Dynamics
             Authentication auth = new Authentication(config);//, Authority);  
 
             httpClient = new HttpClient(auth.ClientHandler, true);
-
            
             httpClient.Timeout = new TimeSpan(0, 2, 0);
             httpClient.DefaultRequestHeaders.Add("OData-MaxVersion", "4.0");
@@ -204,8 +177,6 @@ namespace Defra.CustomerMaster.Identity.Api.Dynamics
             if (!contactResponse.IsSuccessStatusCode)
             {
                 throw new WebFaultException(contactResponse.ReasonPhrase, (int)contactResponse.StatusCode);
-                
-                //throw excepreturn null;
             }
             return contactResponse;
         }
