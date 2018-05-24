@@ -23,7 +23,7 @@ namespace Defra.CustomerMaster.Identity.Api
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Bare,
             UriTemplate = "/InitialMatch/{UPN}")]
-        ServiceObject InitialMatch(string UPN);
+        string InitialMatch(string UPN);
 
 
         /// <summary>
@@ -40,7 +40,7 @@ namespace Defra.CustomerMaster.Identity.Api
             ResponseFormat = WebMessageFormat.Json,
             BodyStyle = WebMessageBodyStyle.Bare,
             UriTemplate = "/UserInfo/")]
-        ServiceObject UserInfo(Contact contact);
+        string UserInfo(Contact contact);
 
 
         /// <summary>

@@ -49,7 +49,7 @@ namespace Defra.CustomerMaster.Identity.Api
         /// <returns>{    "ErrorCode": 200,    "ErrorMsg": null,   
         /// "ServiceUserID": "ec11676a-d85a-e811-a832-000d3a27889d"}
         /// </returns>
-        public ServiceObject InitialMatch(string UPN)
+        public string InitialMatch(string UPN)
         {
             try
             {
@@ -59,20 +59,20 @@ namespace Defra.CustomerMaster.Identity.Api
                     throw new WebFaultException("UPN can not be empty or null",400);
                 Contact crmContact = new CrmApiWrapper().InitialMatch(UPN);
                 ServiceObject returnObj = new ServiceObject() { ServiceUserID = crmContact.contactid,ErrorCode=(int)crmContact.HttpStatusCode, ErrorMsg=crmContact.Message};
-                return returnObj;                
-                //return JsonConvert.SerializeObject(returnObj);
+                            
+                return JsonConvert.SerializeObject(returnObj);
             }
             catch (WebFaultException ex)
             {
                 System.Diagnostics.Trace.TraceError(ex.Message);
-                return (new ServiceObject() { ServiceUserID = null, ErrorMsg = ex.ErrorMsg, ErrorCode = ex.HttpStatusCode });
-               // return JsonConvert.SerializeObject(new ServiceObject() { ServiceUserID = null, ErrorMsg = ex.ErrorMsg,ErrorCode=ex.HttpStatusCode});
+                //return (new ServiceObject() { ServiceUserID = null, ErrorMsg = ex.ErrorMsg, ErrorCode = ex.HttpStatusCode });
+                return JsonConvert.SerializeObject(new ServiceObject() { ServiceUserID = null, ErrorMsg = ex.ErrorMsg,ErrorCode=ex.HttpStatusCode});
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Trace.TraceError(ex.Message);
-                return (new ServiceObject() { ServiceUserID = null, ErrorMsg = ex.Message });
-                //return JsonConvert.SerializeObject(new ServiceObject() { ServiceUserID = null,ErrorMsg=ex.Message });
+               // return (new ServiceObject() { ServiceUserID = null, ErrorMsg = ex.Message });
+                return JsonConvert.SerializeObject(new ServiceObject() { ServiceUserID = null,ErrorMsg=ex.Message });
             }
         }
 
@@ -83,7 +83,7 @@ namespace Defra.CustomerMaster.Identity.Api
         /// <returns>{    "ErrorCode": 200,    "ErrorMsg": "",
         /// "ServiceUserID": "b56748e5-dd5a-e811-a838-000d3a2b2b9f"
         /// }</returns>
-        public ServiceObject UserInfo(Contact contact)
+        public string UserInfo(Contact contact)
         {
             try
             {
@@ -100,20 +100,20 @@ namespace Defra.CustomerMaster.Identity.Api
                 Contact crmContact = new CrmApiWrapper().UserInfo(contact);
                 ServiceObject returnObj = new ServiceObject() { ServiceUserID = crmContact.contactid ,ErrorCode=(int)crmContact.HttpStatusCode, ErrorMsg=crmContact.Message };
 
-                return returnObj;// JsonConvert.SerializeObject(returnObj);
+                return JsonConvert.SerializeObject(returnObj);
 
             }
             catch (WebFaultException ex)
             {                
                 System.Diagnostics.Trace.TraceError(ex.Message);
-                return (new ServiceObject() { ServiceUserID = null, ErrorMsg = ex.ErrorMsg, ErrorCode = ex.HttpStatusCode });
+                return JsonConvert.SerializeObject(new ServiceObject() { ServiceUserID = null, ErrorMsg = ex.ErrorMsg, ErrorCode = ex.HttpStatusCode });
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Trace.TraceError(ex.Message);
                 // throw new WebFaultException(customError, HttpStatusCode.NotFound);
-               // return JsonConvert.SerializeObject(new ServiceObject() { ServiceUserID = null, ErrorMsg = ex.Message });
-                return (new ServiceObject() { ServiceUserID = null, ErrorMsg = ex.Message });
+                return JsonConvert.SerializeObject(new ServiceObject() { ServiceUserID = null, ErrorMsg = ex.Message });
+                //return (new ServiceObject() { ServiceUserID = null, ErrorMsg = ex.Message });
             }
         }
     }
