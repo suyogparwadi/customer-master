@@ -22,29 +22,57 @@ namespace Defra.CustomerMaster.Identity.Api
         //public List<ServiceUserLink> Authz(string ServiceID, string UPN)
         public AuthzResponse Authz(string ServiceID, string UPN)
         {
-            ServiceUserLinks serviceUserLinks = new CrmApiWrapper().Authz(ServiceID, UPN);
-            //return serviceUserLinks.value;
+          
             List<string> rolesList = new List<string>();
             List<string> mappingsList = new List<string>();
-            foreach (ServiceUserLink serviceUserLink in serviceUserLinks.serviceUserLinks)
+            try
             {
-                string roleListItem = serviceUserLink.OrganisationId + ":" + serviceUserLink.RoleId;
-                if (!rolesList.Contains(roleListItem))
-                    rolesList.Add(roleListItem);
-                string mappingListOrgItem = serviceUserLink.OrganisationId + ":" + serviceUserLink.OrganisationName;
-                if (!mappingsList.Contains(mappingListOrgItem))
-                    mappingsList.Add(mappingListOrgItem);
-                string mappingListRoleItem = serviceUserLink.RoleId + ":" + serviceUserLink.RoleName;
-                if (!mappingsList.Contains(mappingListRoleItem))
-                    mappingsList.Add(mappingListRoleItem);
+                ServiceUserLinks serviceUserLinks = new CrmApiWrapper().Authz(ServiceID, UPN);
+                //return serviceUserLinks.value;                
+                foreach (ServiceUserLink serviceUserLink in serviceUserLinks.serviceUserLinks)
+                {
+                    string roleListItem = serviceUserLink.OrganisationId + ":" + serviceUserLink.RoleId;
+                    if (!rolesList.Contains(roleListItem))
+                        rolesList.Add(roleListItem);
+                    string mappingListOrgItem = serviceUserLink.OrganisationId + ":" + serviceUserLink.OrganisationName;
+                    if (!mappingsList.Contains(mappingListOrgItem))
+                        mappingsList.Add(mappingListOrgItem);
+                    string mappingListRoleItem = serviceUserLink.RoleId + ":" + serviceUserLink.RoleName;
+                    if (!mappingsList.Contains(mappingListRoleItem))
+                        mappingsList.Add(mappingListRoleItem);
+                }
+            }
+            catch (WebFaultException ex)
+            {
+                System.Diagnostics.Trace.TraceError(ex.Message);
+                return new AuthzResponse
+                {
+                    status = 401,
+                    version = "1.0.0.0",
+                    roles = rolesList,
+                    mappings = mappingsList
+                };
+            }
+            catch (Exception ex)
+            {
+                System.Diagnostics.Trace.TraceError(ex.Message);
+                return new AuthzResponse
+                {
+                    status = 401,
+                    version = "1.0.0.0",
+                    roles = rolesList,
+                    mappings = mappingsList
+                };
+
             }
             return new AuthzResponse
-            {
-                status = 200,
-                version = "1.0.0.0",
-                roles = rolesList,
-                mappings = mappingsList
-            };
+                {
+                    status = 200,
+                    version = "1.0.0.0",
+                    roles = rolesList,
+                    mappings = mappingsList
+                };        
+           
 
         }
 
