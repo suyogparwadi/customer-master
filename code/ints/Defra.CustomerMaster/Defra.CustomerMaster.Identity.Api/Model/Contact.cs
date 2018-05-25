@@ -15,15 +15,14 @@ namespace Defra.CustomerMaster.Identity.Api.Model
         [DataMember]
         public string firstname;
 
-        [DataMember]
-        [Required]
+        [DataMember]       
         public string lastname;
 
         [DataMember]
         public string emailid;
 
         [DataMember]
-        [Required]
+        [Required(ErrorMessage= "UPN can not be empty or null")]
         public string UPN;
 
         [DataMember]

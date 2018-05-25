@@ -62,6 +62,7 @@ namespace Defra.CustomerMaster.Identity.Api.Model
     public class ServiceUserLinks
     {
         [DataMember]
-        public List<ServiceUserLink> value;
+        [JsonProperty("value")]
+        public List<ServiceUserLink> serviceUserLinks;
     }
 }

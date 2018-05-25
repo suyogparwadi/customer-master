@@ -22,15 +22,21 @@ namespace Defra.CustomerMaster.Identity.Api
         //public List<ServiceUserLink> Authz(string ServiceID, string UPN)
         public AuthzResponse Authz(string ServiceID, string UPN)
         {
-            ServiceUserLinks serviceUserLinks = new CrmApiWrapper().Authz(ServiceID,UPN);            
+            ServiceUserLinks serviceUserLinks = new CrmApiWrapper().Authz(ServiceID, UPN);
             //return serviceUserLinks.value;
             List<string> rolesList = new List<string>();
             List<string> mappingsList = new List<string>();
-            foreach(ServiceUserLink serviceUserLink in serviceUserLinks.value)
+            foreach (ServiceUserLink serviceUserLink in serviceUserLinks.serviceUserLinks)
             {
-                rolesList.Add(serviceUserLink.OrganisationId + ":" + serviceUserLink.RoleId);
-                mappingsList.Add(serviceUserLink.OrganisationId + ":" + serviceUserLink.OrganisationName);
-                mappingsList.Add(serviceUserLink.RoleId + ":" + serviceUserLink.RoleName);
+                string roleListItem = serviceUserLink.OrganisationId + ":" + serviceUserLink.RoleId;
+                if (!rolesList.Contains(roleListItem))
+                    rolesList.Add(roleListItem);
+                string mappingListOrgItem = serviceUserLink.OrganisationId + ":" + serviceUserLink.OrganisationName;
+                if (!mappingsList.Contains(mappingListOrgItem))
+                    mappingsList.Add(mappingListOrgItem);
+                string mappingListRoleItem = serviceUserLink.RoleId + ":" + serviceUserLink.RoleName;
+                if (!mappingsList.Contains(mappingListRoleItem))
+                    mappingsList.Add(mappingListRoleItem);
             }
             return new AuthzResponse
             {
@@ -53,26 +59,26 @@ namespace Defra.CustomerMaster.Identity.Api
         {
             try
             {
-                System.Diagnostics.Trace.TraceError("IntialMatch call:"+UPN);
+                System.Diagnostics.Trace.TraceError("IntialMatch call:" + UPN);
                 //return string.Format("ServicieUserID is: {0}", new CrmApiWrapper().InitialMatch(UPN));
                 if (string.IsNullOrEmpty(UPN) || string.IsNullOrWhiteSpace(UPN))
-                    throw new WebFaultException("UPN can not be empty or null",400);
+                    throw new WebFaultException("UPN can not be empty or null", 400);
                 Contact crmContact = new CrmApiWrapper().InitialMatch(UPN);
-                ServiceObject returnObj = new ServiceObject() { ServiceUserID = crmContact.contactid,ErrorCode=(int)crmContact.HttpStatusCode, ErrorMsg=crmContact.Message};
-                            
+                ServiceObject returnObj = new ServiceObject() { ServiceUserID = crmContact.contactid, ErrorCode = (int)crmContact.HttpStatusCode, ErrorMsg = crmContact.Message };
+
                 return JsonConvert.SerializeObject(returnObj);
             }
             catch (WebFaultException ex)
             {
                 System.Diagnostics.Trace.TraceError(ex.Message);
                 //return (new ServiceObject() { ServiceUserID = null, ErrorMsg = ex.ErrorMsg, ErrorCode = ex.HttpStatusCode });
-                return JsonConvert.SerializeObject(new ServiceObject() { ServiceUserID = null, ErrorMsg = ex.ErrorMsg,ErrorCode=ex.HttpStatusCode});
+                return JsonConvert.SerializeObject(new ServiceObject() { ServiceUserID = null, ErrorMsg = ex.ErrorMsg, ErrorCode = ex.HttpStatusCode });
             }
             catch (Exception ex)
             {
                 System.Diagnostics.Trace.TraceError(ex.Message);
-               // return (new ServiceObject() { ServiceUserID = null, ErrorMsg = ex.Message });
-                return JsonConvert.SerializeObject(new ServiceObject() { ServiceUserID = null,ErrorMsg=ex.Message });
+                // return (new ServiceObject() { ServiceUserID = null, ErrorMsg = ex.Message });
+                return JsonConvert.SerializeObject(new ServiceObject() { ServiceUserID = null, ErrorMsg = ex.Message });
             }
         }
 
@@ -87,24 +93,24 @@ namespace Defra.CustomerMaster.Identity.Api
         {
             try
             {
-                System.Diagnostics.Trace.TraceError("UserInfo call params:{0},{1}",contact.UPN,contact.emailid);
-                
-                if ((contact== null)|| string.IsNullOrEmpty(contact.UPN))
+                System.Diagnostics.Trace.TraceError("UserInfo call params:{0},{1}", contact.UPN, contact.emailid);
+
+                if ((contact == null) || string.IsNullOrEmpty(contact.UPN))
                 {
-                    throw new WebFaultException("UPN can not be empty or null",401);
+                    throw new WebFaultException("UPN can not be empty or null", 401);
                 }
                 if ((contact == null) || string.IsNullOrEmpty(contact.lastname))
                 {
                     throw new WebFaultException("lastname can not be empty or null", 401);
                 }
                 Contact crmContact = new CrmApiWrapper().UserInfo(contact);
-                ServiceObject returnObj = new ServiceObject() { ServiceUserID = crmContact.contactid ,ErrorCode=(int)crmContact.HttpStatusCode, ErrorMsg=crmContact.Message };
+                ServiceObject returnObj = new ServiceObject() { ServiceUserID = crmContact.contactid, ErrorCode = (int)crmContact.HttpStatusCode, ErrorMsg = crmContact.Message };
 
                 return JsonConvert.SerializeObject(returnObj);
 
             }
             catch (WebFaultException ex)
-            {                
+            {
                 System.Diagnostics.Trace.TraceError(ex.Message);
                 return JsonConvert.SerializeObject(new ServiceObject() { ServiceUserID = null, ErrorMsg = ex.ErrorMsg, ErrorCode = ex.HttpStatusCode });
             }
