@@ -1,0 +1,43 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.25420.1
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CrmPackage", "CrmPackage\CrmPackage.csproj", "{AF285BEB-F7AB-41B0-95B4-8686C4FE7616}"
+	ProjectSection(ProjectDependencies) = postProject
+		{39C4EA60-9CAB-4B18-91BB-6ABB134945B8} = {39C4EA60-9CAB-4B18-91BB-6ABB134945B8}
+		{3380F985-1364-4881-8A71-E60824DB312D} = {3380F985-1364-4881-8A71-E60824DB312D}
+	EndProjectSection
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Plugins", "Plugins\Plugins.csproj", "{3380F985-1364-4881-8A71-E60824DB312D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OperationsWorkflows", "OperationsWorkflows\OperationsWorkflows.csproj", "{39C4EA60-9CAB-4B18-91BB-6ABB134945B8}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{AF285BEB-F7AB-41B0-95B4-8686C4FE7616}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{AF285BEB-F7AB-41B0-95B4-8686C4FE7616}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{AF285BEB-F7AB-41B0-95B4-8686C4FE7616}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{AF285BEB-F7AB-41B0-95B4-8686C4FE7616}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{AF285BEB-F7AB-41B0-95B4-8686C4FE7616}.Release|Any CPU.Build.0 = Release|Any CPU
+		{AF285BEB-F7AB-41B0-95B4-8686C4FE7616}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{3380F985-1364-4881-8A71-E60824DB312D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3380F985-1364-4881-8A71-E60824DB312D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3380F985-1364-4881-8A71-E60824DB312D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3380F985-1364-4881-8A71-E60824DB312D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{39C4EA60-9CAB-4B18-91BB-6ABB134945B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{39C4EA60-9CAB-4B18-91BB-6ABB134945B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{39C4EA60-9CAB-4B18-91BB-6ABB134945B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{39C4EA60-9CAB-4B18-91BB-6ABB134945B8}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(CRMSolutionProperties) = preSolution
+		SolutionIsBoundToCRM = True
+	EndGlobalSection
+EndGlobal
