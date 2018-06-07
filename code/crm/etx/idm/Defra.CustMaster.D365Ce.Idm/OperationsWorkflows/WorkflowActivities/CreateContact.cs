@@ -122,9 +122,12 @@ namespace Defra.Customer.Plugins.WorkflowActivities
                                 contact["middlename"] = contactPayload.middlename;
                             if (contactPayload.middlename != null)
                                 contact["emailaddress1"] = contactPayload.email;
-                            contact["defra_b2cobjectid"] = contactPayload.b2cobjectid;
-                            contact["defra_tacsaccepted"] = contactPayload.tacsacceptedversion;
-                            contact["telephone1"] = contactPayload.telephone;
+                            if (contactPayload.b2cobjectid != null)
+                                contact["defra_b2cobjectid"] = contactPayload.b2cobjectid;
+                            if (contactPayload.tacsacceptedversion != null)
+                                contact["defra_tacsacceptedversion"] = contactPayload.tacsacceptedversion;
+                            if (contact["telephone1"] != null)
+                                contact["telephone1"] = contactPayload.telephone;
 
                             objCommon.tracingService.Trace("setting contact date params:started..");
                             if (!string.IsNullOrEmpty(contactPayload.tacsacceptedon) && !string.IsNullOrWhiteSpace(contactPayload.tacsacceptedon))

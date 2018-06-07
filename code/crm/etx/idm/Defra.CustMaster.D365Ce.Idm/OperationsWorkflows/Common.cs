@@ -307,32 +307,44 @@ namespace Defra.Customer
         {
             OrganizationServiceContext orgSvcContext = new OrganizationServiceContext(this.service);
             Entity address = new Entity("defra_address");
-            address["defra_uprn"] = addressDetails.uprn;
-            address["defra_name"] = addressDetails.buildingname;
-            address["defra_premises"] = addressDetails.buildingnumber + "," + addressDetails.buildingname;
-            address["defra_street"] = addressDetails.street;
-            address["defra_locality"] = addressDetails.locality;
-            address["defra_towntext"] = addressDetails.town;
-            address["defra_postcode"] = addressDetails.postcode;
+            if (addressDetails.uprn != null)
+                address["defra_uprn"] = addressDetails.uprn;
+            if (addressDetails.buildingname != null)
+                address["defra_name"] = addressDetails.buildingname;
+            if (addressDetails.buildingnumber != null)
+                address["defra_premises"] = addressDetails.buildingnumber;// + "," + addressDetails.buildingname;
+            if (addressDetails.street != null)
+                address["defra_street"] = addressDetails.street;
+            if (addressDetails.locality != null)
+                address["defra_locality"] = addressDetails.locality;
+            if (addressDetails.town != null)
+                address["defra_towntext"] = addressDetails.town;
+            if (addressDetails.postcode != null)
+                address["defra_postcode"] = addressDetails.postcode;
             bool resultCompanyHouse;
-            if (Boolean.TryParse(addressDetails.fromcompanieshouse, out resultCompanyHouse))
-                address["defra_fromcompanieshouse"] = resultCompanyHouse;
-            var CountryRecord = from c in orgSvcContext.CreateQuery("defra_country")
-                                where ((string)c["defra_name"]).ToLower().Contains((addressDetails.county.Trim().ToLower()))
-                                select new { CountryId = c.Id };
-            Guid countryGuid = CountryRecord != null && CountryRecord.FirstOrDefault() != null ? CountryRecord.FirstOrDefault().CountryId : Guid.Empty;
-            if (countryGuid != Guid.Empty)
-                address["defra_country"] = new EntityReference("defra_country", countryGuid);
+            if (addressDetails.fromcompanieshouse != null)
+                if (Boolean.TryParse(addressDetails.fromcompanieshouse, out resultCompanyHouse))
+                    address["defra_fromcompanieshouse"] = resultCompanyHouse;
+            if (addressDetails.county != null)
+            {
+                var CountryRecord = from c in orgSvcContext.CreateQuery("defra_country")
+                                    where ((string)c["defra_name"]).ToLower().Contains((addressDetails.county.Trim().ToLower()))
+                                    select new { CountryId = c.Id };
+                Guid countryGuid = CountryRecord != null && CountryRecord.FirstOrDefault() != null ? CountryRecord.FirstOrDefault().CountryId : Guid.Empty;
+                if (countryGuid != Guid.Empty)
+                    address["defra_country"] = new EntityReference("defra_country", countryGuid);
+            }
             Guid addressId = this.service.Create(address);
             if (addressId != Guid.Empty)
             {
                 Entity contactDetails = new Entity("defra_addressdetails");
                 contactDetails["defra_address"] = new EntityReference("defra_address", addressId);
                 int resultAddressType;
-                if (int.TryParse(addressDetails.type, out resultAddressType))
-                {
-                    contactDetails["defra_addresstype"] = new OptionSetValue(resultAddressType);
-                }
+                if (addressDetails.type != null)
+                    if (int.TryParse(addressDetails.type, out resultAddressType))
+                    {
+                        contactDetails["defra_addresstype"] = new OptionSetValue(resultAddressType);
+                    }
 
                 contactDetails["defra_customer"] = Customer;
                 Guid contactDetailId = this.service.Create(contactDetails);
