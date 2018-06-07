@@ -107,11 +107,14 @@ namespace Defra.Customer.Plugins.WorkflowActivities
                         objCommon.tracingService.Trace("CreateContact activity:ContactRecordGuidWithUPN is empty started, Creating Contact..");
 
                         ErrorCode = 200;//Success
+                        if (contactPayload.title != null)
                         contact["defra_title"] = contactPayload.title;
                         contact["firstname"] = contactPayload.firstname;
                         contact["lastname"] = contactPayload.lastname;
-                        contact["middlename"] = contactPayload.middlename;
-                        contact["emailaddress1"] = contactPayload.email;
+                        if (contactPayload.middlename != null)
+                            contact["middlename"] = contactPayload.middlename;
+                        if (contactPayload.middlename != null)
+                            contact["emailaddress1"] = contactPayload.email;
                         contact["defra_b2cobjectid"] = contactPayload.b2cobjectid;
                         contact["defra_tacsaccepted"] = contactPayload.tacsacceptedversion;
                         contact["telephone1"] = contactPayload.telephone;
@@ -166,14 +169,14 @@ namespace Defra.Customer.Plugins.WorkflowActivities
                         objCommon.tracingService.Trace("CreateContact activity:ContactRecordGuidWithUPN is found/duplicate started..");
                         ErrorCode = 412;//Duplicate UPN
                         _ErrorMessage = "Duplicate Record";
-                    }
-                    objCommon.tracingService.Trace("CreateContact activity:setting output params like error code etc.. started");
-                    this.IsRecordCreated.Set(executionContext, _IsRecordCreated);
-                    this.Code.Set(executionContext, ErrorCode.ToString());
-                    this.Message.Set(executionContext, _ErrorMessage);
-                    this.MessageDetail.Set(executionContext, _ErrorMessageDetail);
-                    objCommon.tracingService.Trace("CreateContact activity:setting output params like error code etc.. ended");
+                    }                    
                 }
+                objCommon.tracingService.Trace("CreateContact activity:setting output params like error code etc.. started");
+                this.IsRecordCreated.Set(executionContext, _IsRecordCreated);
+                this.Code.Set(executionContext, ErrorCode.ToString());
+                this.Message.Set(executionContext, _ErrorMessage);
+                this.MessageDetail.Set(executionContext, _ErrorMessageDetail);
+                objCommon.tracingService.Trace("CreateContact activity:setting output params like error code etc.. ended");
             }
             catch (FaultException<OrganizationServiceFault> ex)
             {
@@ -192,6 +195,7 @@ namespace Defra.Customer.Plugins.WorkflowActivities
 
         public void CreateAddress(Address addressDetails, Guid contactId)
         {
+            objCommon.tracingService.Trace("CreateAddress activity:started..");
             OrganizationServiceContext orgSvcContext = new OrganizationServiceContext(objCommon.service);
             Entity address = new Entity("defra_address");
             address["defra_uprn"] = addressDetails.uprn;
@@ -210,9 +214,12 @@ namespace Defra.Customer.Plugins.WorkflowActivities
             Guid countryGuid = CountryRecord != null && CountryRecord.FirstOrDefault() != null ? CountryRecord.FirstOrDefault().CountryId : Guid.Empty;
             if (countryGuid != Guid.Empty)
                 address["defra_country"] = new EntityReference("defra_country", countryGuid);
+            objCommon.tracingService.Trace("CreateAddress activity:creating address..");
             Guid addressId = objCommon.service.Create(address);
+            objCommon.tracingService.Trace("CreateAddress activity:created address..");
             if (addressId != Guid.Empty)
             {
+                objCommon.tracingService.Trace("CreateAddressDetails activity:started..");
                 Entity contactDetails = new Entity("defra_addressdetails");
                 contactDetails["defra_address"] = new EntityReference("defra_address", addressId);
                 int resultAddressType;
@@ -220,9 +227,10 @@ namespace Defra.Customer.Plugins.WorkflowActivities
                 {
                     contactDetails["defra_addresstype"] = new OptionSetValue(resultAddressType);
                 }
-
                 contactDetails["defra_customer"] = new EntityReference("contact", contactId);
+                objCommon.tracingService.Trace("CreateAddressDetails activity:creating address details..");
                 Guid contactDetailId = objCommon.service.Create(contactDetails);
+                objCommon.tracingService.Trace("CreateAddressDetails activity:created address details..");
             }
 
         }
